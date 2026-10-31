@@ -21,7 +21,7 @@ export default function ThemeToggle() {
       data-testid="theme-toggle"
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={() => setDark((d) => !d)}
-      className="glass-card fixed right-4 top-4 z-40 flex h-11 w-11 items-center justify-center rounded-full transition-transform active:scale-90"
+      className="glass-card fixed right-[max(1rem,env(safe-area-inset-right))] top-[max(1rem,env(safe-area-inset-top))] z-40 flex h-12 w-12 min-h-[48px] min-w-[48px] items-center justify-center rounded-full transition-transform active:scale-90 shadow-md cursor-pointer"
     >
       {dark ? (
         <Sun className="h-5 w-5 text-gold" />

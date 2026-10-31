@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 import { CONFIG, LABELS } from "@/config/surpriseConfig";
+import CallHighlightArea from "@/components/CallHighlightArea";
+import { prefersReducedMotion } from "@/utils/feedback";
 
 function SectionHeading({ eyebrow, title, sub }) {
   return (
@@ -25,6 +27,8 @@ function SectionHeading({ eyebrow, title, sub }) {
 }
 
 export default function Timeline() {
+  const rm = prefersReducedMotion();
+
   return (
     <section className="relative px-5 py-16 sm:px-8 sm:py-24" data-testid="timeline-section">
       <div className="mx-auto max-w-2xl">
@@ -65,20 +69,49 @@ export default function Timeline() {
                   <h3 className="px-1 pt-1 font-serif text-xl font-semibold text-ink sm:text-2xl">
                     {m.title}
                   </h3>
-                  {m.photo && (
-                    <div className="mt-3 overflow-hidden rounded-xl">
-                      <img
-                        src={m.photo}
-                        alt={m.title}
-                        loading="lazy"
-                        decoding="async"
-                        className="aspect-[4/3] w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
-                      />
-                    </div>
+
+                  {m.isCallHighlight ? (
+                    <CallHighlightArea
+                      timeDisplay={m.timeDisplay}
+                      timeSubtext={m.timeSubtext}
+                      note={m.caption}
+                    />
+                  ) : (
+                    <>
+                      {m.photo && (
+                        <div className="mt-3 overflow-hidden rounded-xl">
+                          <img
+                            src={m.photo}
+                            alt={m.title}
+                            loading="lazy"
+                            decoding="async"
+                            className="aspect-[4/3] w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+                          />
+                        </div>
+                      )}
+
+                      {m.highlightEnding && m.caption.includes(m.highlightEnding) ? (
+                        <div className="px-1 pt-2 space-y-2 text-sm leading-relaxed text-inksoft sm:text-[15px]">
+                          <p>
+                            {m.caption.replace(m.highlightEnding, "").trim()}
+                          </p>
+                          <motion.p
+                            initial={rm ? { opacity: 1 } : { opacity: 0, y: 6 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, amount: 0.5 }}
+                            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                            className="block font-serif italic text-base sm:text-lg font-medium text-rose-deep pt-1 drop-shadow-sm"
+                          >
+                            {m.highlightEnding}
+                          </motion.p>
+                        </div>
+                      ) : (
+                        <p className="px-1 pt-2 text-sm leading-relaxed text-inksoft sm:text-[15px]">
+                          {m.caption}
+                        </p>
+                      )}
+                    </>
                   )}
-                  <p className="px-1 pt-2 text-sm leading-relaxed text-inksoft sm:text-[15px]">
-                    {m.caption}
-                  </p>
                 </div>
               </motion.article>
             ))}

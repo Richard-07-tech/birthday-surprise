@@ -34,6 +34,18 @@ function makeDevServerV5Compatible(devServerConfig) {
 
   if (onBeforeSetupMiddleware || setupMiddlewares) {
     compatibleConfig.setupMiddlewares = (middlewares, devServer) => {
+      if (devServer?.app) {
+        devServer.app.get("/api/time", (req, res) => {
+          const now = new Date();
+          res.json({
+            utc: now.toISOString(),
+            timestamp_ms: now.getTime(),
+            status: "ok",
+            source: "server",
+          });
+        });
+      }
+
       if (onBeforeSetupMiddleware) {
         onBeforeSetupMiddleware(devServer);
       }

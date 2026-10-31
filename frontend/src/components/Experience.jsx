@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import Petals from "@/components/Petals";
 import Hero from "@/components/Hero";
+import MiruReveal from "@/components/MiruReveal";
 import Timeline from "@/components/Timeline";
 import MemoryCards from "@/components/MemoryCards";
 import Letter from "@/components/Letter";
@@ -27,6 +28,7 @@ export default function Experience() {
       <Petals />
       <div className="relative z-10">
         <Hero />
+        <MiruReveal />
         <Timeline />
         <MemoryCards />
         <Letter />

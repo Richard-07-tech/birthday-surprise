@@ -20,7 +20,7 @@ export default function EasterEggHeart() {
         initial={{ opacity: 0, scale: 0.6 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 2.5, duration: 0.6 }}
-        className="glass-card fixed bottom-5 right-5 z-40 flex h-11 w-11 items-center justify-center rounded-full"
+        className="glass-card fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[max(1.25rem,env(safe-area-inset-right))] z-40 flex h-12 w-12 min-h-[48px] min-w-[48px] items-center justify-center rounded-full cursor-pointer shadow-md"
       >
         <motion.span
           animate={{ scale: [1, 1.25, 1] }}
@@ -53,7 +53,7 @@ export default function EasterEggHeart() {
                 data-testid="easter-egg-close"
                 aria-label="Close"
                 onClick={() => setOpen(false)}
-                className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full text-inkmute transition-colors hover:text-ink"
+                className="absolute right-3 top-3 flex h-12 w-12 min-h-[48px] min-w-[48px] items-center justify-center rounded-full text-inkmute transition-colors hover:text-ink cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>

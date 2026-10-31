@@ -115,7 +115,9 @@ export default function Letter() {
             total={total}
             className="font-serif text-2xl font-semibold italic text-ink sm:text-3xl"
           >
-            {CONFIG.letter.opening} {CONFIG.herName},
+            {CONFIG.letter.opening.endsWith(",") || CONFIG.letter.opening.includes(CONFIG.herName)
+              ? CONFIG.letter.opening
+              : `${CONFIG.letter.opening} ${CONFIG.herName},`}
           </RevealLine>
 
           <div className="mt-5 space-y-4">

@@ -1,88 +1,214 @@
 // ============================================================
-//  EDIT EVERYTHING HERE — no code changes needed anywhere else.
-//  Swap names, dates, words, photos and letter lines below.
+//  SURPRISE CONFIGURATION FOR MIRU
+//  Edit everything here — names, dates, words, photos, notes.
 // ============================================================
 
 export const CONFIG = {
   // --- WHO ---
-  herName: "Her Name", // ← EDIT: her name (as you want it in the headline)
-  herNameShort: "love", // ← EDIT: pet name used in small copy
-  yourName: "Your Name", // ← EDIT: your sign-off name
+  herName: "MIRU", // Her name
+  herNameShort: "Miru", // Pet name used in small copy
+  yourName: "Your Name", // Your sign-off name
 
-  // --- KEY DATES (YYYY-MM-DD) ---
-  startDate: "2022-02-14", // ← EDIT: the day you got together
-  birthday: "1999-06-15", // ← EDIT: her birthday (year doesn't matter, month+day does)
+  // --- KEY DATES & TIMING ---
+  // Birthday: 3 November 2007 (turning 19 on 3 Nov 2026), Asia/Kolkata timezone
+  birthday: "2007-11-03",
+  birthdayLabel: "3 November 2007",
+  timezone: "Asia/Kolkata",
 
-  // --- 1. SECRET GATE ---
+  // Lock Page unlock threshold: 00:00 IST on 3 November 2026
+  unlockAt: "2026-11-03T00:00:00+05:30",
+
+  // "Since we met" counter: met on 3 November 2025
+  metOn: "2025-11-03",
+
+  // Private preview bypass: visit the site with ?preview=miru-preview-2026 to skip the lock page early
+  previewEnabled: true,
+  previewKey: "miru-preview-2026",
+
+  // --- 1. LOCK / LANDING PAGE ---
+  lock: {
+    title: "Something special is waiting for you, MIRU 💫",
+    subtitle: "A little world made just for you 🌸",
+    teaser: "Tap anytime to step inside 💖",
+    gotoButton: "Go to Surprise ✨",
+    tapMessages: [
+      "Hey birthday girl 😏",
+      "Ready for your surprise? ✨",
+      "Tap the cute button below! 💖",
+      "Something magical is waiting for you 💫",
+      "Made with all my love, just for you 🌸",
+    ],
+    unlockedButton: "Go to Surprise ✨",
+    unlockedHeading: "Something special is waiting for you, MIRU 💫",
+    unlockedSub: "A little world made just for you 🌸",
+  },
+
+  // --- 2. PASSWORD PAGE (Secret password gate) ---
   gate: {
     teaser: "Psst… someone built a little world for you.",
-    teaserSub: "It only opens with one word.",
-    secretWord: "forever", // ← EDIT: the secret word
-    inputLabel: "The secret word",
-    button: "Unlock",
+    teaserSub: "It only opens with the secret password.",
+    secretWord: "120310112007", // The secret password to enter
+    inputLabel: "Enter the password",
+    button: "Unlock ✨",
     unlockedLine: "Welcome in, beautiful.",
     hints: [
-      "Hint: it's the word you whisper at the end of a promise…",
-      "Warmer: we say it to each other every single night.",
-      "Okay okay — it starts with “fo…” and rhymes with “ever”.",
+      "Hint: a special combination of our dates… 💫",
+      "Warmer: special numbers from our story 💗",
+      "Pssst: 120310112007 ✨",
     ],
     stillStuck: "Take your time. I'd wait a thousand years at this door.",
   },
 
-  // --- 2. HERO ---
+  // --- 3. HERO ---
   hero: {
     eyebrow: "A little universe, made for you",
     subline: "Every star on this page is a day you made brighter. Ready to look back with me?",
-    togetherLabel: "Together since",
-    untilLabel: "Sleeps until your day",
-    todayLine: "It's your day. Make a wish.",
+    sinceMetLabel: "Since we met",
+    sinceMetCaption: "tap to see us ✨",
+    talkTimeLabel: "OUR TALK TIME",
+    talkTimeCaption: "of just us talking · tap ✨",
+    turningAge: 19,
+    turningLabel: "Happy 19th",
+    todayLine: "Today is the day 🎉",
+    birthdaySpecialLine: "One year since we met. The best birthday gift I ever got was you.",
   },
 
-  // --- 3. OUR STORY — 5-6 moments. Set photo to null for a text-only moment. ---
+  // --- SINCE WE MET STORY POPUP CONFIG ---
+  sinceMetStory: {
+    beat1Date: "3 November 2025…",
+    beat1Line: "the day my life got a little brighter.",
+    beat6Line: "Most things don't last. Some things only grow stronger.",
+    finaleLine: "One year of you, MIRU. And I'd choose you again.",
+    finaleBirthdayLine: "Happy 1 year, and happy 19th, MIRU 🎂",
+  },
+
+  // --- OUR TALK TIME & STATS (Our Numbers experience) ---
+  talkStats: {
+    daysTalked: 310,
+    avgHoursPerDay: 1.2,
+    maxHoursInADay: 3,
+    longestStreakDays: 24,
+    closingLine: "And I'd still say I'm not done talking to you.",
+  },
+
+  // --- 4. THE MIRU FULL-FORM REVEAL ---
+  acronym: {
+    eyebrow: "The meaning behind your name",
+    tagline: "Every letter is another reason I fall for you",
+    letters: [
+      {
+        letter: "M",
+        word: "Mine",
+        note: "still how many days we have nu therla... but naa irrukeno illayo... you will always be my miru kutyy😋😋",
+      },
+      {
+        letter: "I",
+        word: "Independent uhh....",
+        note: "na irrukeno illaya nee epayumee strong haaa mass haa gethu haa irrukanum, college hee NCC SW MIrudhula keela than😋",
+      },
+      {
+        letter: "R",
+        word: "Radiant uhhh",
+        note: "ofcouse enna siripu enna alagu neega majja vaa irrupiga neega always, big fan uhh madom😋😋",
+      },
+      {
+        letter: "U",
+        word: "Unique",
+        note: "nee always unique than seriya... nee un mela neriyaa kora irruku nu sollite irrupa, irrukatum... enaku athuvum pidikum unta seriyaaa",
+      },
+    ],
+    conclusion: "girl 💫",
+    conclusionSub: "today, tomorrow, and forever.",
+  },
+
+  // --- 5. OUR STORY ---
   timeline: [
     {
-      date: "14 Feb 2022",
+      date: "3 Nov 2025",
       title: "The day we met",
-      caption: "Swap this with the story of the very first hello — where you were, what you wore, what I thought.",
-      photo:
-        "https://images.unsplash.com/photo-1624339389686-cfca209567df?crop=entropy&cs=srgb&fm=jpg&q=85",
+      caption: "The start of everything. When an ordinary day turned into the most important day of my year.",
+      photo: "/images/first-met.jpg",
     },
     {
-      date: "Mar 2022",
-      title: "Our first date",
-      caption: "The nervous laughs, the dessert we shared, the walk that was too short.",
-      photo:
-        "https://images.unsplash.com/photo-1651005985573-cfbd0da9e01e?crop=entropy&cs=srgb&fm=jpg&q=85",
-    },
-    {
-      date: "Jun 2022",
-      title: "The first trip",
-      caption: "Wrong turns, terrible playlists, the best two days.",
-      photo:
-        "https://images.unsplash.com/photo-1591969851586-adbbd4accf81?crop=entropy&cs=srgb&fm=jpg&q=85",
-    },
-    {
-      date: "One rainy afternoon",
-      title: "The afternoon it rained",
-      caption: "No photo for this one — some moments live better in the heart.",
+      date: "28 DECEMBER 2025 · 4:08 PM",
+      title: "The day I told you",
+      caption:
+        "I still remember it perfectly: 28 December, 4:08 in the afternoon, on a call with you. My heart was racing, my words were shaking, and I finally said what I'd been carrying for so long. I told you I liked you. Of everything I've ever done, that is the thing I'm happiest I did. Thank you for being the person I found the courage for. 💗",
       photo: null,
+      isCallHighlight: true,
+      timeDisplay: "4:08 PM",
+      timeSubtext: "28 December · the day my heart spoke first",
     },
     {
-      date: "Dec 2023",
-      title: "The people who matter",
-      caption: "The day our two worlds met and instantly got along.",
+      date: "Mid 2026",
+      title: "Through every quiet evening",
+      caption:
+        "A lot happened between us. We fought, a lot. Misunderstandings in the daytime, arguments deep into the night, words we never really meant. But every single time, when the storm passed, we stayed. it was never about never falling apart. It was about choosing each other again, every time. And I'd choose you again. 💗",
+      photo: null,
+      highlightEnding: "And I'd choose you again. 💗",
+    },
+    {
+      date: "3 Nov 2026",
+      title: "Exactly one year today",
+      caption: "365 days of knowing you, and a lifetime more to go.",
       photo:
         "https://images.unsplash.com/photo-1562232573-0305012a8818?crop=entropy&cs=srgb&fm=jpg&q=85",
     },
+  ],
+
+  // --- 6. THINGS I LIKE ABOUT YOU (Cinematic chapters) ---
+  // Each chapter: id (matches signature), title, note, photo path, photoAlt, focalPoint.
+  // Personality chapter also has `chips` array (editable word chips).
+  // Drop images into frontend/public/images/ with the matching filename.
+  reasons: [
     {
-      date: "Every day since",
-      title: "Today",
-      caption: "Still my favourite hello and my hardest goodbye.",
-      photo: null,
+      id: "smile",
+      title: "Your smile",
+      note: "The one that starts in your eyes and takes the whole room with it.",
+      photo: "/images/smile.jpg",        // replace with your photo
+      photoAlt: "Her smile",
+      focalPoint: "50% 30%",
+    },
+    {
+      id: "hair",
+      title: "Your hair",
+      note: "Every strand a different shade of perfect. I notice it every time.",
+      photo: "/images/hair.jpg",         // replace with your photo
+      photoAlt: "Her hair",
+      focalPoint: "50% 20%",
+    },
+    {
+      id: "personality",
+      title: "Your personality",
+      note: "Soft and fierce. Funny and deep. Wonderfully, entirely you.",
+      photo: "/images/personality.jpg",  // replace with your photo
+      photoAlt: "Her personality",
+      focalPoint: "50% 30%",
+      chips: ["kind", "funny", "caring", "strong", "real", "warm"], // editable word chips
     },
   ],
 
-  // --- 4. MEMORY FLIP CARDS — tap to flip up. Photos lazy-load; any URL works. ---
+  // Loading bar captions (shown while the bar fills)
+  reasonsLoading: {
+    cap0to30: "Counting everything I love about you…",
+    cap30to60: "Adding your laugh… your kindness… the way you care…",
+    cap60to90: "This is taking longer than expected…",
+    cap99: "Wait… there's too much 🥹",
+    transitionLine: "…and that's just the beginning.",
+  },
+
+  // Finale text + collage image
+  reasonsFinale: {
+    bigWord: "Everything.",
+    sub: "I love everything about you, MIRU. 💗",
+    replay: "Replay ✨",
+    collage: {
+      path: "/images/collage.jpg", // drop your collage here; falls back to placeholder until uploaded
+      alt: "A collage of MIRU",
+    },
+  },
+
+  // --- 7. MEMORY FLIP CARDS (Kept for backward compatibility — not currently rendered) ---
   cards: [
     {
       title: "Your smile",
@@ -91,8 +217,8 @@ export const CONFIG = {
         "https://images.unsplash.com/photo-1598759310798-18f8497d9858?crop=entropy&cs=srgb&fm=jpg&q=85",
     },
     {
-      title: "That night we danced",
-      note: "No music needed. Terrible moves. Perfect night.",
+      title: "That night we talked forever",
+      note: "No hurry, no worries. Just you and me under the stars.",
       photo:
         "https://images.unsplash.com/photo-1651005985573-cfbd0da9e01e?crop=entropy&cs=srgb&fm=jpg&q=85",
     },
@@ -109,32 +235,31 @@ export const CONFIG = {
         "https://images.unsplash.com/photo-1591969851586-adbbd4accf81?crop=entropy&cs=srgb&fm=jpg&q=85",
     },
     {
-      title: "Inside jokes",
+      title: "Our inside jokes",
       note: "A whole language with two speakers. Strangers will never understand.",
       photo:
         "https://images.unsplash.com/photo-1562232573-0305012a8818?crop=entropy&cs=srgb&fm=jpg&q=85",
     },
     {
       title: "Your heart",
-      note: "Soft and stubborn all at once. The safest place I know.",
+      note: "Soft, stubborn, and wonderfully kind. The safest place I know.",
       photo:
         "https://images.unsplash.com/photo-1651005985573-cfbd0da9e01e?crop=entropy&cs=srgb&fm=jpg&q=85",
     },
   ],
 
-  // --- 5. THE LETTER — one array item = one revealed line. ---
+  // --- 7. THE LETTER (Line-by-line fade-in reveal at the end) ---
   letter: {
     heading: "The Letter",
-    opening: "My dearest",
+    opening: "Soo vanakamm,",
     lines: [
-      "If you're reading this, you found the word — of course you did.",
-      "I wanted to give you something no shop sells, so I built you a small universe instead.",
-      "Every petal falling up there is a day you made softer.",
-      "Every card you opened is a moment I replay when the world gets loud.",
-      "You make ordinary Tuesdays feel like something worth remembering.",
-      "You laugh at my worst jokes. You hold my hand in crowded rooms.",
-      "You are my favourite notification, my calmest silence, my home.",
-      "So here is my wish, on your day: more mornings, more terrible dancing, more you and me.",
+      "Happy Birthday di alagii🥳🥳🥳, it's been a year since we got together and yen nu therlaa unaya vida unoda birthday ikku na than romba happy haa irrukenn, nalla enjoy pannu life haaa, nee lifee laa unaku pudichaa maari oru nalla nelamaiku varuvaa seriyaaa,naa always un kuuda irruthuu support pannitee irrupen....",
+      "You are the most perfect imperfect girl i ever seen,",
+      "But yen nu therlaa I even like you flaws and imperfections tooo..... Nee apa apaa thugurathu, sometimes joke puriyama oru maari stun aagi yosipaa... I like every bit of itt.....",
+      "Soo you are most pretty girl i ever knownnn,still many years too goo maa, soo i promise I will always stay by your side and do my best for you toooo....",
+      "And vera ennaa..... Nee Naa venam nuu mudivu pannitaa already soo, enna soldrathu.... Haan unakuu enaya vidaa oru better haanaa and enaya vidaa oru Superr haan life partner kadeipaaga future laa, yen sonne nu therlaa but sollanum nu thonuchii solliten .....",
+      "I always wished the best for youuu okiee vaa nee life laa super haa varuvaa.... Once again wishing you all the very besttt.....",
+      "Happy 19 my Miru Kutty😋😋😋😋😋",
     ],
     signOff: "Forever yours,",
   },
@@ -145,16 +270,48 @@ export const CONFIG = {
     wishMessage: "Close your eyes. Whatever you just wished for — I'm on my way to help you get it.",
   },
   easterEgg: {
-    message: "You found the hidden heart. Of course you did — you've always found the things I hide too well. I love you.",
+    message: "You found the hidden heart. Of course you did — you've always found the things I hide too well. I love you, MIRU.",
   },
 };
 
-// Small helper labels you may want to tweak
+// Small helper labels
 export const LABELS = {
   timelineEyebrow: "Our Story",
-  timelineTitle: "Six little moments",
+  timelineTitle: "Moments of Us",
   timelineSub: "The short version of forever — scroll slowly.",
-  cardsEyebrow: "Memory Lane",
-  cardsTitle: "Things I love about you",
-  cardsSub: "Tap a card. It flips upward — like a page of us.",
+  cardsEyebrow: "Just a few things…",
+  cardsTitle: "Things I like about you",
+  cardsSub: "Scroll slowly. Each one is real.",
 };
+
+/**
+ * Computes talk time statistics from CONFIG.talkStats
+ */
+export function getComputedTalkStats() {
+  const stats = CONFIG.talkStats || {};
+  const daysTalked = stats.daysTalked ?? 310;
+  const avgHoursPerDay = stats.avgHoursPerDay ?? 1.2;
+  const maxHoursInADay = stats.maxHoursInADay ?? 3;
+  const longestStreakDays = stats.longestStreakDays ?? 24;
+  const closingLine =
+    stats.closingLine || "And I'd still say I'm not done talking to you.";
+
+  const totalHours = Math.round(daysTalked * avgHoursPerDay); // 372
+  const continuousDays = Math.floor(totalHours / 24); // 15
+  const remainingHours = Math.round(totalHours % 24); // 12
+  const totalMinutes = Math.round(totalHours * 60); // 22,320
+  const minutesFormatted = (Math.floor(totalMinutes / 1000) * 1000).toLocaleString(); // "22,000"
+
+  return {
+    daysTalked,
+    avgHoursPerDay,
+    maxHoursInADay,
+    longestStreakDays,
+    closingLine,
+    totalHours,
+    continuousDays,
+    remainingHours,
+    totalMinutes,
+    minutesFormatted,
+  };
+}

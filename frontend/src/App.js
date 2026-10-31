@@ -1,39 +1,96 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { CONFIG } from "@/config/surpriseConfig";
 import { haptic, prefersReducedMotion } from "@/utils/feedback";
+import {
+  checkIsUnlocked,
+  syncServerTime,
+} from "@/utils/dateUtils";
 import Experience from "@/components/Experience";
 import ThemeToggle from "@/components/ThemeToggle";
+import LockPage from "@/components/LockPage";
 
 export default function App() {
+  // Check for private preview bypass key in query string: ?preview=[key]
+  const [previewBypassed, setPreviewBypassed] = useState(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const key = params.get("preview");
+      if (CONFIG.previewEnabled && key && key === CONFIG.previewKey) {
+        sessionStorage.setItem("previewBypass", "1");
+        return true;
+      }
+      return sessionStorage.getItem("previewBypass") === "1";
+    }
+    return false;
+  });
+
+  const [lockPassed, setLockPassed] = useState(() => {
+    if (typeof window !== "undefined") {
+      if (sessionStorage.getItem("previewBypass") === "1") return true;
+      if (sessionStorage.getItem("lockPassed") === "1") return true;
+      return false;
+    }
+    return false;
+  });
+
   const [revealed, setRevealed] = useState(false);
   const [gateGone, setGateGone] = useState(
-    () => sessionStorage.getItem("gatePassed") === "1"
+    () => typeof window !== "undefined" && sessionStorage.getItem("gatePassed") === "1"
   );
+
+  // Sync server time on initial load
+  useEffect(() => {
+    syncServerTime();
+  }, []);
 
   useEffect(() => {
     if (gateGone) sessionStorage.setItem("gatePassed", "1");
   }, [gateGone]);
 
+  useEffect(() => {
+    if (lockPassed) sessionStorage.setItem("lockPassed", "1");
+  }, [lockPassed]);
+
+  // STAGE 1: LOCK PAGE -> STAGE 2: PASSWORD GATE -> STAGE 3: SURPRISE EXPERIENCE
   return (
-    <main
-      className="full-vh relative min-h-screen w-full overflow-x-clip bg-blush font-sans text-ink antialiased"
-      data-testid="app-root"
-    >
-      {revealed && (
-        <>
-          <ThemeToggle />
-          <Experience />
-        </>
-      )}
-      {!gateGone && (
-        <Gate
-          onReveal={() => setRevealed(true)}
-          onDone={() => setGateGone(true)}
+    <AnimatePresence mode="wait">
+      {!lockPassed && !previewBypassed ? (
+        <LockPage
+          key="lock-landing-page"
+          onUnlock={() => {
+            setLockPassed(true);
+            sessionStorage.setItem("lockPassed", "1");
+          }}
         />
+      ) : (
+        <motion.main
+          key="surprise-app-root"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="full-vh relative min-h-screen w-full overflow-x-clip bg-blush font-sans text-ink antialiased"
+          data-testid="app-root"
+        >
+          {/* Experience rendered only after passing password gate */}
+          {revealed && (
+            <>
+              <ThemeToggle />
+              <Experience />
+            </>
+          )}
+
+          {/* Password Gate */}
+          {!gateGone && (
+            <Gate
+              onReveal={() => setRevealed(true)}
+              onDone={() => setGateGone(true)}
+            />
+          )}
+        </motion.main>
       )}
-    </main>
+    </AnimatePresence>
   );
 }
 
@@ -77,7 +134,7 @@ function Gate({ onReveal, onDone }) {
       transition={{ duration: 0.95, ease: [0.76, 0, 0.24, 1] }}
       data-testid="secret-gate"
     >
-      {/* ambient glows */}
+      {/* Ambient glows */}
       <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[rgba(244,114,182,0.22)] blur-3xl" />
       <div className="pointer-events-none absolute bottom-0 right-0 h-64 w-64 rounded-full bg-[rgba(201,151,43,0.16)] blur-3xl" />
 
@@ -117,13 +174,13 @@ function Gate({ onReveal, onDone }) {
             autoComplete="off"
             autoCapitalize="none"
             disabled={bursting}
-            className="glass-card h-12 w-full rounded-full px-5 text-center font-serif text-lg text-ink outline-none placeholder:font-sans placeholder:text-sm placeholder:text-inkmute focus-visible:ring-2 focus-visible:ring-petal"
+            className="glass-card h-12 min-h-[48px] w-full rounded-full px-5 text-center font-serif text-lg text-ink outline-none placeholder:font-sans placeholder:text-sm placeholder:text-inkmute focus-visible:ring-2 focus-visible:ring-petal shadow-sm"
           />
           <button
             type="submit"
             data-testid="secret-gate-submit"
             disabled={bursting}
-            className="group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-rosedeep font-sans text-sm font-semibold tracking-wide text-white shadow-[0_10px_30px_rgba(219,39,119,0.35)] transition-transform active:scale-[0.97] sm:text-base"
+            className="group flex h-12 min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-rosedeep font-sans text-sm font-semibold tracking-wide text-white shadow-[0_10px_30px_rgba(219,39,119,0.35)] transition-transform active:scale-[0.97] cursor-pointer sm:text-base"
           >
             {bursting ? gate.unlockedLine : gate.button}
             {!bursting && (
