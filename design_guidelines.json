@@ -1,0 +1,158 @@
+{
+  "project_name": "Cinematic Birthday Surprise Web App",
+  "app_type": "mobile_web_app",
+  "archetype": "ORGANIC & LUXURY ROMANTIC",
+  "tech_stack": {
+    "framework": "React.js (JavaScript, not TypeScript)",
+    "styling": "Tailwind CSS",
+    "animation": "framer-motion, lenis (smooth scroll)",
+    "icons": "lucide-react",
+    "components": "shadcn/ui customized primitives, sonner for notifications"
+  },
+  "typography": {
+    "font_family_imports": [
+      "@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Caveat:wght@400;600;700&display=swap');"
+    ],
+    "heading_serif": "Cormorant Garamond, Georgia, serif",
+    "body_sans": "Plus Jakarta Sans, -apple-system, sans-serif",
+    "handwritten_note": "Caveat, cursive",
+    "hierarchy": {
+      "hero_title": "text-4xl sm:text-5xl lg:text-6xl font-serif tracking-tight font-semibold leading-tight",
+      "section_title": "text-2xl sm:text-3xl lg:text-4xl font-serif tracking-tight font-medium",
+      "subtitle": "text-base sm:text-lg font-sans font-normal opacity-85 leading-relaxed",
+      "card_title": "text-lg sm:text-xl font-serif font-semibold",
+      "handwritten_note_text": "text-lg sm:text-xl font-handwritten text-amber-900 dark:text-amber-200 leading-snug",
+      "label_overline": "text-xs uppercase tracking-[0.25em] font-sans font-semibold text-rose-500 dark:text-amber-400"
+    }
+  },
+  "colors": {
+    "theme_strategy": "Light & Airy Soft Pinks + Champagne Gold default, with Cozy Glow Dark Mode toggle",
+    "light_mode": {
+      "background": "#FFF9FB",
+      "background_subtle": "#FFF0F5",
+      "card_bg": "rgba(255, 255, 255, 0.85)",
+      "card_border": "rgba(244, 114, 182, 0.2)",
+      "text_primary": "#2D1B28",
+      "text_secondary": "#6E5466",
+      "text_muted": "#9C7C93",
+      "accent_pink": "#F472B6",
+      "accent_pink_deep": "#DB2777",
+      "accent_gold": "#D97706",
+      "accent_gold_light": "#FDE68A",
+      "glow_highlight": "rgba(251, 113, 133, 0.15)",
+      "glass_surface": "rgba(255, 255, 255, 0.7)",
+      "glass_border": "rgba(255, 255, 255, 0.8)"
+    },
+    "dark_mode": {
+      "background": "#120B10",
+      "background_subtle": "#1D121B",
+      "card_bg": "rgba(32, 20, 30, 0.85)",
+      "card_border": "rgba(217, 119, 6, 0.3)",
+      "text_primary": "#FDF2F8",
+      "text_secondary": "#F3E8EE",
+      "text_muted": "#C2A8B9",
+      "accent_pink": "#F472B6",
+      "accent_pink_deep": "#F43F5E",
+      "accent_gold": "#F59E0B",
+      "accent_gold_light": "#FEF08A",
+      "glow_highlight": "rgba(245, 158, 11, 0.2)",
+      "glass_surface": "rgba(29, 18, 27, 0.75)",
+      "glass_border": "rgba(244, 114, 182, 0.2)"
+    }
+  },
+  "layout_and_spacing": {
+    "viewport_target": "Mobile First (390px iPhone width optimization), scaling cleanly to Tablet (768px) and Desktop (1440px)",
+    "container_padding": "px-4 sm:px-8 max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto",
+    "section_gap": "py-16 sm:py-24 space-y-16 sm:space-y-24",
+    "card_padding": "p-5 sm:p-7",
+    "touch_targets": "minimum 44px height and width for interactive buttons and cards"
+  },
+  "single_page_flow_sections": [
+    {
+      "step": 1,
+      "id": "secret-gate",
+      "name": "The Secret Gate",
+      "description": "Lock screen preventing accidental views. Teasing subtitle, secret key input box with escalating cute hints for wrong attempts, and magical sparkle/confetti explosion upon unlock.",
+      "features": [
+        "Escalating hint logic (Attempt 1: subtle hint, Attempt 2: specific memory hint, Attempt 3+: explicit clue)",
+        "Unlock button + Keyboard Enter key trigger",
+        "Confetti/Sparkle burst particle animation upon correct entry",
+        "Smooth page height expansion / gate slide out transition",
+        "data-testid='secret-gate-input', data-testid='secret-gate-submit', data-testid='secret-gate-hint'"
+      ]
+    },
+    {
+      "step": 2,
+      "id": "hero-section",
+      "name": "Cinematic Hero & Counters",
+      "description": "Gentle floating heart/star/petal canvas particles, animated Happy Birthday headline, live Days Together counter and Birthday Countdown timer.",
+      "features": [
+        "Floating interactive particles (canvas or motion divs with subtle drift)",
+        "Days Together live counter (calculates exact days, hours, mins since anniversary date)",
+        "Birthday Countdown timer",
+        "Light / Dark mode floating quick toggle (top right fixed/glass)",
+        "data-testid='hero-headline', data-testid='days-together-counter', data-testid='birthday-countdown'"
+      ]
+    },
+    {
+      "step": 3,
+      "id": "our-story",
+      "name": "Our Story Vertical Timeline",
+      "description": "5-6 curated romantic milestones with subtle glowing vertical connector line, dates, captions, and lazy-loaded polaroid image frames fading in on scroll.",
+      "features": [
+        "Vertical gold gradient timeline axis",
+        "Scroll-triggered fade and slide entrance (framer-motion initial/whileInView)",
+        "Polaroid frame styling with soft box shadow and light tilt effect",
+        "data-testid='timeline-item-0', data-testid='timeline-item-1', etc."
+      ]
+    },
+    {
+      "step": 4,
+      "id": "memory-cards",
+      "name": "Memory Flip Cards (Centerpiece)",
+      "description": "2-column grid on mobile (responsive 2-4 on desktop). Cards flip UPWARDS 180 degrees around horizontal axis (rotateX) with true 3D perspective.",
+      "features": [
+        "Front: Romantic title + decorative gold foil ribbon frame + subtle tilt-on-touch/hover",
+        "Back: High quality lazy-loaded photo on one side + handwritten note (Caveat font) beside/stacked with soft ambient shadow",
+        "3D perspective: perspective: 1000px, transform-style: preserve-3d, rotateX(180deg)",
+        "Works seamlessly with touch tap, mouse click, and keyboard Space/Enter",
+        "Haptic feedback triggers on flip if navigator.vibrate available",
+        "data-testid='memory-card-0', data-testid='memory-card-flip-btn-0'"
+      ]
+    },
+    {
+      "step": 5,
+      "id": "the-letter",
+      "name": "The Letter & Finale",
+      "description": "Heartfelt personal letter revealing line-by-line with soft opacity fade on scroll. Closing fireworks/floating lanterns finale scene with final sign-off.",
+      "features": [
+        "Line-by-line scroll opacity reveal (Lenis + Framer Motion staggered view)",
+        "Hidden Heart Easter Egg: Small floating glowing heart that opens a modal secret message when tapped",
+        "Fireworks or Floating Lantern canvas animation trigger at the end of the letter",
+        "Replay unlock experience button",
+        "data-testid='letter-container', data-testid='easter-egg-heart', data-testid='finale-sign-off'"
+      ]
+    }
+  ],
+  "image_urls": {
+    "couple_sunset": "https://images.unsplash.com/photo-1651005985573-cfbd0da9e01e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwzfHxyb21hbnRpYyUyMHN1bnNldCUyMGdvbGRlbiUyMGhvdXIlMjBjb3VwbGUlMjBhZXN0aGV0aWMlMjBmbG93ZXIlMjBzb2Z0JTIwbGlnaHR8ZW58MHx8fHwxNzkzNDM0MDkwfDA&ixlib=rb-4.1.0&q=85",
+    "holding_flowers": "https://images.unsplash.com/photo-1746592059760-d56e7a8a729f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHw0fHxyb21hbnRpYyUyMHN1bnNldCUyMGdvbGRlbiUyMGhvdXIlMjBjb3VwbGUlMjBhZXN0aGV0aWMlMjBmbG93ZXIlMjBzb2Z0JTIwbGlnaHR8ZW58MHx8fHwxNzkzNDM0MDkwfDA&ixlib=rb-4.1.0&q=85",
+    "cosmos_flower": "https://images.unsplash.com/photo-1624339389686-cfca209567df?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMHN1bnNldCUyMGdvbGRlbiUyMGhvdXIlMjBjb3VwbGUlMjBhZXN0aGV0aWMlMjBmbG93ZXIlMjBzb2Z0JTIwbGlnaHR8ZW58MHx8fHwxNzkzNDM0MDkwfDA&ixlib=rb-4.1.0&q=85",
+    "couple_silhouette": "https://images.unsplash.com/photo-1591969851586-adbbd4accf81?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwyfHxyb21hbnRpYyUyMHN1bnNldCUyMGdvbGRlbiUyMGhvdXIlMjBjb3VwbGUlMjBhZXN0aGV0aWMlMjBmbG93ZXIlMjBzb2Z0JTIwbGlnaHR8ZW58MHx8fHwxNzkzNDM0MDkwfDA&ixlib=rb-4.1.0&q=85",
+    "pink_rose_book": "https://images.unsplash.com/photo-1562232573-0305012a8818?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzZ8MHwxfHNlYXJjaHwyfHxwaW5rJTIwcm9zZSUyMGJsb3Nzb20lMjByb21hbmNlJTIwYWVzdGhldGljfGVufDB8fHx8MTc5MzQzNDA5NHww&ixlib=rb-4.1.0&q=85",
+    "pink_rose_bloom": "https://images.unsplash.com/photo-1598759310798-18f8497d9858?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzZ8MHwxfHNlYXJjaHwzfHxwaW5rJTIwcm9zZSUyMGJsb3Nzb20lMjByb21hbmNlJTIwYWVzdGhldGljfGVufDB8fHx8MTc5MzQzNDA5NHww&ixlib=rb-4.1.0&q=85"
+  },
+  "config_file_architecture": {
+    "location": "/src/config/surpriseConfig.js",
+    "structure": "Exported object containing: partnerName, secretWord, hintsArray, startDate, birthdayDate, timelineMoments, memoryCards, letterParagraphs, easterEggMessage.",
+    "purpose": "Enables zero-code modification of all personal names, dates, photos, and messages."
+  },
+  "instructions_to_main_agent": [
+    "Build the application using pure React JavaScript (.js / .jsx) components as per frontend setup.",
+    "Initialize Lenis smooth scrolling in App.js for cinematic weight and fluid scroll movement.",
+    "Ensure memory cards flip vertically (rotateX) on tap/click with framer-motion 3D perspective.",
+    "Ensure mobile layout handles 360px+ screens without any horizontal scroll bar.",
+    "Add explicit data-testid attributes to all gate inputs, buttons, timeline items, memory cards, theme toggles, and easter egg triggers.",
+    "Implement canvas/framer-motion particle effects for floating petals in Hero and floating fireworks/lanterns in Finale."
+  ]
+}
