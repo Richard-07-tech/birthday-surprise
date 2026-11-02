@@ -53,14 +53,14 @@ export const CONFIG = {
   gate: {
     teaser: "Psst… someone built a little world for you.",
     teaserSub: "It only opens with the secret password.",
-    secretWord: "120310112007", // The secret password to enter
+    secretWord: "1325130918211121202025", // The secret password to enter
     inputLabel: "Enter the password",
     button: "Unlock ✨",
     unlockedLine: "Welcome in, beautiful.",
     hints: [
-      "Hint: a special combination of our dates… 💫",
+      "Hint: Richy's favorite way of addressing Miru 💫",
       "Warmer: special numbers from our story 💗",
-      "Pssst: 120310112007 ✨",
+      "Pssst: 1325130918211121202025 ✨",
     ],
     stillStuck: "Take your time. I'd wait a thousand years at this door.",
   },
@@ -91,7 +91,7 @@ export const CONFIG = {
   // --- OUR TALK TIME & STATS (Our Numbers experience) ---
   talkStats: {
     daysTalked: 310,
-    avgHoursPerDay: 1.2,
+    avgHoursPerDay: 1.217,
     maxHoursInADay: 3,
     longestStreakDays: 24,
     closingLine: "And I'd still say I'm not done talking to you.",
