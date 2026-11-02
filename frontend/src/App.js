@@ -30,6 +30,7 @@ export default function App() {
     if (typeof window !== "undefined") {
       if (sessionStorage.getItem("previewBypass") === "1") return true;
       if (sessionStorage.getItem("lockPassed") === "1") return true;
+      if (checkIsUnlocked(CONFIG.unlockAt)) return true;
       return false;
     }
     return false;
@@ -42,7 +43,11 @@ export default function App() {
 
   // Sync server time on initial load
   useEffect(() => {
-    syncServerTime();
+    syncServerTime().then(() => {
+      if (checkIsUnlocked(CONFIG.unlockAt)) {
+        setLockPassed(true);
+      }
+    });
   }, []);
 
   useEffect(() => {

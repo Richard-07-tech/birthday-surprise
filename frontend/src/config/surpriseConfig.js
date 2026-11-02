@@ -7,7 +7,7 @@ export const CONFIG = {
   // --- WHO ---
   herName: "MIRU", // Her name
   herNameShort: "Miru", // Pet name used in small copy
-  yourName: "Your Name", // Your sign-off name
+  yourName: "RICHY", // Your sign-off name
 
   // --- KEY DATES & TIMING ---
   // Birthday: 3 November 2007 (turning 19 on 3 Nov 2026), Asia/Kolkata timezone
@@ -25,22 +25,28 @@ export const CONFIG = {
   previewEnabled: true,
   previewKey: "miru-preview-2026",
 
+  // Test unlock time — set to a near-future IST timestamp to test the countdown locally.
+  // Leave empty string "" to use unlockAt instead.
+  testUnlockAt: "", // e.g. "2026-11-02T23:55:00+05:30"
+
   // --- 1. LOCK / LANDING PAGE ---
   lock: {
     title: "Something special is waiting for you, MIRU 💫",
-    subtitle: "A little world made just for you 🌸",
-    teaser: "Tap anytime to step inside 💖",
+    subtitle: "Opens at midnight on 3 November",
+    countdownLabel: "Opens at midnight on 3 November",
+    teaser: "Come back on your birthday 🎂",
+    lockedTapMessage: "Not yet, birthday girl 😏",
     gotoButton: "Go to Surprise ✨",
     tapMessages: [
-      "Hey birthday girl 😏",
-      "Ready for your surprise? ✨",
-      "Tap the cute button below! 💖",
+      "Not yet, birthday girl 😏",
+      "Almost there! ✨",
+      "Patience is cute on you 💖",
       "Something magical is waiting for you 💫",
       "Made with all my love, just for you 🌸",
     ],
-    unlockedButton: "Go to Surprise ✨",
-    unlockedHeading: "Something special is waiting for you, MIRU 💫",
-    unlockedSub: "A little world made just for you 🌸",
+    unlockedButton: "Open your surprise ✨",
+    unlockedHeading: "Your surprise is unlocked! ✨",
+    unlockedSub: "Step inside, birthday girl 🌸",
   },
 
   // --- 2. PASSWORD PAGE (Secret password gate) ---
@@ -168,6 +174,8 @@ export const CONFIG = {
       photo: "/images/smile.jpg",        // replace with your photo
       photoAlt: "Her smile",
       focalPoint: "50% 30%",
+      // "contain" = show the full collage uncropped; "cover" = crop to fill the frame (default)
+      photoFit: "contain",
     },
     {
       id: "hair",
@@ -176,6 +184,7 @@ export const CONFIG = {
       photo: "/images/hair.jpg",         // replace with your photo
       photoAlt: "Her hair",
       focalPoint: "50% 20%",
+      photoFit: "cover",
     },
     {
       id: "personality",
@@ -184,6 +193,7 @@ export const CONFIG = {
       photo: "/images/personality.jpg",  // replace with your photo
       photoAlt: "Her personality",
       focalPoint: "50% 30%",
+      photoFit: "cover",
       chips: ["kind", "funny", "caring", "strong", "real", "warm"], // editable word chips
     },
   ],
@@ -254,13 +264,19 @@ export const CONFIG = {
     opening: "Soo vanakamm,",
     lines: [
       "Happy Birthday di alagii🥳🥳🥳, it's been a year since we got together and yen nu therlaa unaya vida unoda birthday ikku na than romba happy haa irrukenn, nalla enjoy pannu life haaa, nee lifee laa unaku pudichaa maari oru nalla nelamaiku varuvaa seriyaaa,naa always un kuuda irruthuu support pannitee irrupen....",
-      "You are the most perfect imperfect girl i ever seen,",
-      "But yen nu therlaa I even like you flaws and imperfections tooo..... Nee apa apaa thugurathu, sometimes joke puriyama oru maari stun aagi yosipaa... I like every bit of itt.....",
-      "Soo you are most pretty girl i ever knownnn,still many years too goo maa, soo i promise I will always stay by your side and do my best for you toooo....",
-      "And vera ennaa..... Nee Naa venam nuu mudivu pannitaa already soo, enna soldrathu.... Haan unakuu enaya vidaa oru better haanaa and enaya vidaa oru Superr haan life partner kadeipaaga future laa, yen sonne nu therlaa but sollanum nu thonuchii solliten .....",
+      "You are the most perfect imperfect girl i ever seen✨✨,",
+      "But yen nu therlaa I even like you flaws and imperfections tooo..... Nee apa apaa thugurathu, sometimes joke puriyama oru maari stun aagi yosipaa😪🤣🤣... I like every bit of itt😁😋.....",
+      "Soo you are the most prettiest girl i ever knownnn uhh,still many years too goo maa, soo i promise I will always stay by your side and do my best for you toooo....",
+      "And vera ennaa..... i am really happy we are growing together dii, epa than college la first day unaya paatha maari irruku....athu kulla evalo days poiduchu paaru",
+      "Next year nampa epa irrukuratha vidaa better haa and innum close ha irrupom,nee vitalum na unaya vida maaten too don't worry 😋",
+      "Thanks for always staying by my side dii algaii, unaya vida entha lifetime laa enaku perfect ha, understanding haaa and evalo alaga oru ponnu kedaikaave maata,you will always be the best gift i ever had " +
       "I always wished the best for youuu okiee vaa nee life laa super haa varuvaa.... Once again wishing you all the very besttt.....",
       "Happy 19 my Miru Kutty😋😋😋😋😋",
+      "you will always be my greatest gift😋😋😋😋😋 ",
+      "and thanks for being mine😋😋😋 ",
     ],
+    // Indices (0-based) of lines that get the SpecialLine treatment
+    highlightLines: [7, 8, 9],
     signOff: "Forever yours,",
   },
 
@@ -268,6 +284,20 @@ export const CONFIG = {
   finale: {
     wishButton: "Make a wish",
     wishMessage: "Close your eyes. Whatever you just wished for — I'm on my way to help you get it.",
+    wishEasterEgg: {
+      emoji: "😏",
+      caption: "I know exactly what you wished for 😏",
+      mobileParticleCount: 35,
+      desktopParticleCount: 55,
+      cooldownMs: 3000,
+    },
+  },
+  wishEasterEgg: {
+    emoji: "😏",
+    caption: "I know exactly what you wished for 😏",
+    mobileParticleCount: 35,
+    desktopParticleCount: 55,
+    cooldownMs: 3000,
   },
   easterEgg: {
     message: "You found the hidden heart. Of course you did — you've always found the things I hide too well. I love you, MIRU.",

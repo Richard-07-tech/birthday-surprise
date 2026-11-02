@@ -45,6 +45,20 @@ function useParallaxY(ref, strength = 14) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   return useTransform(scrollYProgress, [0, 1], rm ? [0, 0] : [-strength, strength]);
 }
+/** Returns true when the viewport is <= 768 px wide (mobile). SSR-safe. */
+function useIsMobile() {
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth <= 768 : false
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const handler = (e) => setMobile(e.matches);
+    mq.addEventListener("change", handler);
+    setMobile(mq.matches);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return mobile;
+}
 
 // ─── Smile sparkles ───────────────────────────────────────────────────────────
 const SMILE_SPARKS = Array.from({ length: 10 }, (_, i) => ({
@@ -174,6 +188,24 @@ const CHIP_POSITIONS = [
   { top: "88%", right: "-9%" },
 ];
 
+/** Shared chip style — reused for both desktop (absolute) and mobile (inline). */
+function chipStyles(glowing) {
+  return {
+    padding: "6px 13px", borderRadius: 999,
+    fontSize: "0.72rem", fontWeight: 600, cursor: "pointer",
+    border: glowing ? "1px solid transparent" : "1px solid rgba(244,114,182,0.4)",
+    background: glowing
+      ? "linear-gradient(135deg, var(--petal), var(--gold))"
+      : "rgba(255,255,255,0.88)",
+    backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+    color: glowing ? "#fff" : "var(--rose-deep)",
+    boxShadow: glowing ? "0 0 18px rgba(244,114,182,0.65)" : "0 2px 8px rgba(0,0,0,0.08)",
+    transition: "background 0.3s, color 0.3s, box-shadow 0.3s",
+    whiteSpace: "nowrap",
+  };
+}
+
+/** Desktop: absolutely-positioned floating chip. */
 function ChipBubble({ chip, pos, delay }) {
   const rm = useRM();
   const [glowing, setGlowing] = useState(false);
@@ -191,17 +223,7 @@ function ChipBubble({ chip, pos, delay }) {
       style={{
         position: "absolute", ...pos,
         zIndex: 10, pointerEvents: "auto",
-        padding: "4px 11px", borderRadius: 999,
-        fontSize: "0.68rem", fontWeight: 600, cursor: "pointer",
-        border: glowing ? "1px solid transparent" : "1px solid rgba(244,114,182,0.4)",
-        background: glowing
-          ? "linear-gradient(135deg, var(--petal), var(--gold))"
-          : "rgba(255,255,255,0.88)",
-        backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-        color: glowing ? "#fff" : "var(--rose-deep)",
-        boxShadow: glowing ? "0 0 18px rgba(244,114,182,0.65)" : "0 2px 8px rgba(0,0,0,0.08)",
-        transition: "background 0.3s, color 0.3s, box-shadow 0.3s",
-        whiteSpace: "nowrap",
+        ...chipStyles(glowing),
       }}
     >
       {chip}
@@ -209,7 +231,50 @@ function ChipBubble({ chip, pos, delay }) {
   );
 }
 
-function PersonalityChips({ chips }) {
+/** Mobile: inline chip in a flex-wrap row — gentle vertical float only, no sideways overflow. */
+function ChipBubbleMobile({ chip, delay }) {
+  const rm = useRM();
+  const [glowing, setGlowing] = useState(false);
+  const handleTap = (e) => {
+    e.stopPropagation();
+    haptic(30);
+    setGlowing(true);
+    setTimeout(() => setGlowing(false), 900);
+  };
+  return (
+    <motion.button
+      onClick={handleTap}
+      animate={rm ? {} : { y: [0, -4, 0] }}
+      transition={{ duration: 3.2 + delay * 0.4, repeat: Infinity, ease: "easeInOut", delay }}
+      style={{
+        position: "relative",
+        zIndex: 10, pointerEvents: "auto",
+        ...chipStyles(glowing),
+      }}
+    >
+      {chip}
+    </motion.button>
+  );
+}
+
+function PersonalityChips({ chips, isMobile }) {
+  if (isMobile) {
+    // Mobile: centered, wrapping row — no chip ever leaves the screen
+    return (
+      <div
+        style={{
+          display: "flex", flexWrap: "wrap", justifyContent: "center",
+          gap: "8px", padding: "0 12px",
+          pointerEvents: "auto",
+        }}
+      >
+        {(chips || []).map((chip, i) => (
+          <ChipBubbleMobile key={i} chip={chip} delay={i * 0.4} />
+        ))}
+      </div>
+    );
+  }
+  // Desktop: original absolutely-positioned floating chips
   return (
     <>
       {(chips || []).slice(0, CHIP_POSITIONS.length).map((chip, i) => (
@@ -220,18 +285,38 @@ function PersonalityChips({ chips }) {
 }
 
 // ─── Photo frame ──────────────────────────────────────────────────────────────
-function PhotoFrame({ src, alt, focalPoint = "50% 50%", tiltDeg = -1.5, onClick, children }) {
+/**
+ * @param {"cover"|"contain"} fit
+ *   "cover"   – fill the frame, crop if needed (default, good for portraits)
+ *   "contain" – show the whole image uncropped (good for collages / smile)
+ *
+ * On mobile (isMobile=true) with fit="contain":
+ *   – No forced aspect-ratio box; the frame grows to the image's natural height.
+ *   – max-height: 80dvh keeps very tall images from filling the whole screen.
+ *   – Tilt is reduced to ±0.8° so the frame never pokes outside the screen.
+ */
+function PhotoFrame({ src, alt, focalPoint = "50% 50%", tiltDeg = -1.5, fit = "cover", isMobile = false, onClick, children }) {
   const [errored, setErrored] = useState(false);
   const ref = useRef(null);
   const y = useParallaxY(ref);
   const imgSrc = !src || errored ? PLACEHOLDER : src;
+
+  // Mobile + contain: natural-ratio frame (no forced aspect box)
+  const mobileContain = isMobile && fit === "contain";
+  // Reduce tilt on mobile so the rotated frame stays inside the 16px side padding
+  const mobileTilt = tiltDeg > 0 ? 0.8 : -0.8;
+  const activeTilt = isMobile ? mobileTilt : tiltDeg;
+
   return (
     <motion.div
       ref={ref}
-      className="aspect-[4/5] sm:aspect-[3/2]"
+      // Only apply aspect-ratio classes for cover frames; contain frames size to the image
+      className={mobileContain ? "" : "aspect-[4/5] sm:aspect-[3/2]"}
       style={{
-        y, rotate: tiltDeg,
+        y, rotate: activeTilt,
         position: "relative", width: "100%",
+        // For contain frames on mobile: height follows the image; cap at 80dvh
+        ...(mobileContain ? { maxHeight: "80dvh" } : {}),
         borderRadius: "1.5rem", overflow: "hidden",
         boxShadow: "0 16px 56px rgba(201,151,43,0.18), 0 4px 18px rgba(0,0,0,0.08)",
         cursor: onClick ? "pointer" : "default",
@@ -247,8 +332,12 @@ function PhotoFrame({ src, alt, focalPoint = "50% 50%", tiltDeg = -1.5, onClick,
         decoding="async"
         onError={() => setErrored(true)}
         style={{
-          width: "100%", height: "100%",
-          objectFit: "cover", objectPosition: focalPoint, display: "block",
+          width: "100%",
+          // contain mode: auto height so the full image is visible
+          height: mobileContain ? "auto" : "100%",
+          maxHeight: mobileContain ? "80dvh" : undefined,
+          objectFit: mobileContain ? "contain" : "cover",
+          objectPosition: focalPoint, display: "block",
         }}
       />
       {/* gold border ring */}
@@ -266,6 +355,7 @@ function ChapterBlock({ chapter, index }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const rm = useRM();
+  const isMobile = useIsMobile();
   const isReversed = index % 2 === 1;
   const [smileBurst, setSmileBurst] = useState(false);
   const [entered, setEntered] = useState(false);
@@ -280,6 +370,9 @@ function ChapterBlock({ chapter, index }) {
     }
   };
 
+  // Resolve the photo-fit mode: default "cover", overridable per chapter via photoFit
+  const photoFit = chapter.photoFit || "cover";
+
   return (
     <div
       ref={ref}
@@ -288,7 +381,11 @@ function ChapterBlock({ chapter, index }) {
       {/* Photo column */}
       <motion.div
         className="w-full sm:w-1/2"
-        style={{ position: "relative", flexShrink: 0 }}
+        style={{
+          position: "relative", flexShrink: 0,
+          // On mobile give 16px breathing room on each side so tilt never clips
+          padding: isMobile ? "0 16px" : undefined,
+        }}
         initial={rm ? { opacity: 0 } : { opacity: 0, y: 32, filter: "blur(10px)" }}
         animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
         transition={{ duration: rm ? 0.2 : 0.85, ease: [0.22, 1, 0.36, 1] }}
@@ -298,6 +395,8 @@ function ChapterBlock({ chapter, index }) {
           alt={chapter.photoAlt || chapter.title}
           focalPoint={chapter.focalPoint}
           tiltDeg={isReversed ? 1.5 : -1.5}
+          fit={photoFit}
+          isMobile={isMobile}
           onClick={handlePhotoClick}
         >
           {chapter.id === "smile" && (
@@ -306,11 +405,19 @@ function ChapterBlock({ chapter, index }) {
           {chapter.id === "hair" && <HairOverlay entered={entered} />}
         </PhotoFrame>
 
-        {/* Personality chips — outside photo overflow */}
+        {/* Personality chips */}
         {chapter.id === "personality" && chapter.chips && (
-          <div style={{ position: "absolute", inset: 0, overflow: "visible", pointerEvents: "none" }}>
-            <PersonalityChips chips={chapter.chips} />
-          </div>
+          isMobile ? (
+            // Mobile: flex-wrap row below the photo — fully inside the screen
+            <div style={{ marginTop: 12, pointerEvents: "auto" }}>
+              <PersonalityChips chips={chapter.chips} isMobile={true} />
+            </div>
+          ) : (
+            // Desktop: original absolutely-positioned floating chips
+            <div style={{ position: "absolute", inset: 0, overflow: "visible", pointerEvents: "none" }}>
+              <PersonalityChips chips={chapter.chips} isMobile={false} />
+            </div>
+          )
         )}
       </motion.div>
 
@@ -836,6 +943,7 @@ export default function MemoryCards() {
   return (
     <section
       className="relative px-5 py-16 sm:px-8 sm:py-24"
+      style={{ overflowX: "clip" }}
       data-testid="memory-cards-section"
     >
       <div className="mx-auto max-w-4xl">

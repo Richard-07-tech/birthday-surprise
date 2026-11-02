@@ -1,35 +1,80 @@
 // Date and countdown utilities with server-time verification and timezone support
+import { CONFIG } from "@/config/surpriseConfig";
 
 /**
- * Fetches server UTC time from backend to prevent device clock tampering.
- * Falls back gracefully to local device clock if server call fails.
+ * Cached time offset (ms) between authoritative server time and Date.now().
+ * getAuthoritativeTime() = Date.now() + timeOffset
  */
 let timeOffset = 0;
 let hasSyncedWithServer = false;
+let resyncTimer = null;
 
-export async function syncServerTime() {
-  try {
-    const startFetch = performance.now();
-    const res = await fetch("/api/time", { cache: "no-store" });
-    if (!res.ok) throw new Error("HTTP status " + res.status);
-    const data = await res.json();
-    const roundTrip = performance.now() - startFetch;
-    
-    if (data && typeof data.timestamp_ms === "number") {
-      // Offset = (serverTimestamp + roundTrip/2) - Date.now()
-      const serverEstNow = data.timestamp_ms + Math.round(roundTrip / 2);
-      timeOffset = serverEstNow - Date.now();
-      hasSyncedWithServer = true;
-      return { timestampMs: serverEstNow, isServer: true };
+/** Set a 5-minute re-sync timer */
+function scheduleResync() {
+  if (resyncTimer) clearTimeout(resyncTimer);
+  resyncTimer = setTimeout(() => {
+    syncServerTime();
+  }, 5 * 60 * 1000);
+}
+
+// Re-sync when the browser tab becomes visible again
+if (typeof document !== "undefined") {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      syncServerTime();
     }
-  } catch (err) {
-    // Graceful fallback to client device clock
+  });
+}
+
+/**
+ * Fetches server UTC time to prevent device-clock tampering.
+ * 1. Tries GET /api/time  → { now: "<ISO string>" }
+ * 2. Falls back to HEAD / and reads the Date response header
+ * 3. Falls back to device clock
+ */
+export async function syncServerTime() {
+  // Try 1: /api/time
+  try {
+    const t0 = performance.now();
+    const res = await fetch("/api/time", { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      const rtt = performance.now() - t0;
+      if (data && data.now) {
+        const serverMs = new Date(data.now).getTime() + Math.round(rtt / 2);
+        timeOffset = serverMs - Date.now();
+        hasSyncedWithServer = true;
+        scheduleResync();
+        return { timestampMs: Date.now() + timeOffset, isServer: true };
+      }
+    }
+  } catch (_) {
+    // fall through
   }
+
+  // Try 2: HEAD / — read Date header
+  try {
+    const t0 = performance.now();
+    const res = await fetch("/", { method: "HEAD", cache: "no-store" });
+    const dateHdr = res.headers.get("Date");
+    if (dateHdr) {
+      const rtt = performance.now() - t0;
+      const serverMs = new Date(dateHdr).getTime() + Math.round(rtt / 2);
+      timeOffset = serverMs - Date.now();
+      scheduleResync();
+      return { timestampMs: Date.now() + timeOffset, isServer: true };
+    }
+  } catch (_) {
+    // fall through
+  }
+
+  // Fallback: device clock
+  scheduleResync();
   return { timestampMs: Date.now(), isServer: false };
 }
 
 /**
- * Returns authoritative current timestamp (adjusted by server offset)
+ * Returns authoritative current timestamp (adjusted by server offset).
  */
 export function getAuthoritativeTime() {
   return Date.now() + timeOffset;
@@ -37,18 +82,22 @@ export function getAuthoritativeTime() {
 
 /**
  * Checks if the site is currently unlocked based on unlockAt timestamp.
+ * Respects CONFIG.testUnlockAt if set.
  */
 export function checkIsUnlocked(unlockAtStr) {
-  const targetTime = new Date(unlockAtStr).getTime();
+  const target = CONFIG.testUnlockAt ? CONFIG.testUnlockAt : unlockAtStr;
+  const targetTime = new Date(target).getTime();
   const now = getAuthoritativeTime();
   return now >= targetTime;
 }
 
 /**
- * Live countdown to the unlock date (00:00 IST on 3 Nov 2026)
+ * Live countdown to the unlock date.
+ * Respects CONFIG.testUnlockAt — if set, that becomes the countdown target.
  */
 export function getLockCountdown(unlockAtStr) {
-  const targetTime = new Date(unlockAtStr).getTime();
+  const target = CONFIG.testUnlockAt ? CONFIG.testUnlockAt : unlockAtStr;
+  const targetTime = new Date(target).getTime();
   const now = getAuthoritativeTime();
   const diff = targetTime - now;
 
